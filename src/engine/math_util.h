@@ -536,6 +536,7 @@ void vec3i_to_vec3s(Vec3s dest, const Vec3i src);
 void vec3i_to_vec3f(Vec3f dest, const Vec3i src);
 void vec3f_to_vec3s(Vec3s dest, const Vec3f src);
 void vec3f_to_vec3i(Vec3i dest, const Vec3f src);
+void vec3f_length(Vec3f a);
 
 void vec3f_copy_y_off(Vec3f dest, Vec3f src, f32 yOff);
 

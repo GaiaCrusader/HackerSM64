@@ -134,7 +134,7 @@ extern s16 gNumRoomedObjectsInMarioRoom;
 extern s16 gNumRoomedObjectsNotInMarioRoom;
 extern s16 gWDWWaterLevelChanging;
 extern s16 gMarioOnMerryGoRound;
-
+extern s32 gCurrentMario;
 
 void bhv_mario_update(void);
 void set_object_respawn_info_bits(struct Object *obj, u8 bits);

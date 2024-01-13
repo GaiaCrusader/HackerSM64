@@ -8,7 +8,7 @@
  * Internal ROM name. NEEDS TO BE **EXACTLY** 20 CHARACTERS. Can't be 19 characters, can't be 21 characters. You can fill it with spaces.
  * The end quote should be here:               "
  */
-#define INTERNAL_ROM_NAME "HackerSM64          "
+#define INTERNAL_ROM_NAME "SUPER MARIO 128     "
 
 /**
  * Force the game to delete any existing save data originating from a different hack. This requires INTERNAL_ROM_NAME to be unique to work properly.
@@ -29,7 +29,7 @@
  * NOTE: If this is 1, the first controller with input after boot will become player 1. Otherwise, player numbers are automatically assigned via port order.
  * NOTE: It is highly recommended to enable ENABLE_STATUS_REPOLLING_GUI if this is greater than 1.
  */
-#define MAX_NUM_PLAYERS 1
+#define MAX_NUM_PLAYERS 2
 
 /**
  * Enables a GUI that, while opem, allows plugging/unplugging controllers and changing the controller order.
@@ -40,7 +40,7 @@
 /**
  * Allows the player to use the button combo defined in input.h to trigger status repolling at any time during gameplay.
  */
-#define ENABLE_STATUS_REPOLLING_COMBO_IN_GAMEPLAY
+// #define ENABLE_STATUS_REPOLLING_COMBO_IN_GAMEPLAY
 
 /**
  * Highlights the currently pressed buttons on controllers in the status repolling GUI.

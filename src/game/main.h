@@ -30,6 +30,7 @@ enum ThreadID {
 };
 
 extern struct Config gConfig;
+extern u8 gPlayerCount;
 
 // extern OSThread gUnkThread;
 extern OSThread gIdleThread;

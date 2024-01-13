@@ -12,7 +12,7 @@
 /**
  * Allows Mario to easily side flip when moving forwards at any speed.
  */
-// #define SIDE_FLIP_AT_LOW_SPEEDS
+#define SIDE_FLIP_AT_LOW_SPEEDS
 
 /**
  * Allows Mario to aim towards a new direction at the end of turning around,
@@ -41,7 +41,7 @@
 /**
  * Disables fall damage.
  */
-#define NO_FALL_DAMAGE
+// #define NO_FALL_DAMAGE
 
 /**
  * Disables the scream that mario makes when falling off a great height (this is separate from actual fall damage).
@@ -66,12 +66,12 @@
 /**
  * Prevents hands-free holding.
  */
-// #define HANDS_FREE_HOLDING_FIX
+#define HANDS_FREE_HOLDING_FIX
 
 /**
  * Prevents Mario from losing his cap.
  */
-// #define PREVENT_CAP_LOSS
+#define PREVENT_CAP_LOSS
 
 /**
  * Uses Shindou's pole behavior.
@@ -106,7 +106,7 @@
 /**
  * The maximum angle the player can wall kick, in degrees. 0..90. To allow 45 degree wall kicks, you must supply `46` to allow 45 and under.
  */
-#define WALL_KICK_DEGREES 45
+#define WALL_KICK_DEGREES 46
 
 /**
  * Makes Mario unable to ledge grab steep slopes to prevent false ledge grabs.
@@ -129,7 +129,7 @@
  * be interrupted with text
  * Uncomment this to fix this bug, and frustrate speedrunners
  */
-// #define BUGFIX_DIALOG_TIME_STOP
+#define BUGFIX_DIALOG_TIME_STOP
 
 /**
  * Enables Platform Displacement 2, an upgrade to the physics involving moving platforms and how Mario interacts with them.

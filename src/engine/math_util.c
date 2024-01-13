@@ -158,6 +158,10 @@ void vec3f_to_vec3s(Vec3s dest, const Vec3f src) { vec3_copy_bits_roundf(s16, de
 void vec3f_to_vec3i(Vec3i dest, const Vec3f src) { vec3_copy_bits_roundf(s32, dest, src); } // 32 -> 32
 #undef vec3_copy_bits_roundf
 
+void vec3f_length(Vec3f a) {
+    sqrtf(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
+}
+
 #define vec3_copy_y_off_func(destFmt, dest, srcFmt, src, yOff) {\
     register destFmt x = ((srcFmt *) src)[0];                   \
     register destFmt y = ((srcFmt *) src)[1] + yOff;            \

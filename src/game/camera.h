@@ -148,7 +148,7 @@ enum CameraMovementFlags {
 
 enum CameraSounds {
     CAM_SOUND_C_UP_PLAYED           = (1 <<  0), // 0x01
-    CAM_SOUND_MARIO_ACTIVE          = (1 <<  1), // 0x02
+    CAM_SOUND_CHARACTER_ACTIVE      = (1 <<  1), // 0x02
     CAM_SOUND_NORMAL_ACTIVE         = (1 <<  2), // 0x04
     CAM_SOUND_UNUSED_SELECT_MARIO   = (1 <<  3), // 0x08
     CAM_SOUND_UNUSED_SELECT_FIXED   = (1 <<  4), // 0x10
@@ -705,7 +705,7 @@ struct LakituState {
 extern s16 sSelectionFlags;
 extern s16 sCameraSoundFlags;
 extern u16 sCButtonsPressed;
-extern struct PlayerCameraState gPlayerCameraState[2];
+extern struct PlayerCameraState gPlayerCameraState[MAX_NUM_PLAYERS];
 extern struct LakituState gLakituState;
 extern s16 gCameraMovementFlags;
 extern s32 gObjCutsceneDone;

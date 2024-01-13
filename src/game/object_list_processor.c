@@ -219,19 +219,13 @@ struct ParticleProperties sParticleTypes[] = {
  * object.
  */
 void copy_mario_state_to_object(void) {
-    s32 i = 0;
-    // L is real
-    if (gCurrentObject != gMarioObject) {
-        i++;
-    }
+    gCurrentObject->oVelX = gMarioStates[gCurrentMario].vel[0];
+    gCurrentObject->oVelY = gMarioStates[gCurrentMario].vel[1];
+    gCurrentObject->oVelZ = gMarioStates[gCurrentMario].vel[2];
 
-    gCurrentObject->oVelX = gMarioStates[i].vel[0];
-    gCurrentObject->oVelY = gMarioStates[i].vel[1];
-    gCurrentObject->oVelZ = gMarioStates[i].vel[2];
-
-    gCurrentObject->oPosX = gMarioStates[i].pos[0];
-    gCurrentObject->oPosY = gMarioStates[i].pos[1];
-    gCurrentObject->oPosZ = gMarioStates[i].pos[2];
+    gCurrentObject->oPosX = gMarioStates[gCurrentMario].pos[0];
+    gCurrentObject->oPosY = gMarioStates[gCurrentMario].pos[1];
+    gCurrentObject->oPosZ = gMarioStates[gCurrentMario].pos[2];
 
     gCurrentObject->oMoveAnglePitch = gCurrentObject->header.gfx.angle[0];
     gCurrentObject->oMoveAngleYaw = gCurrentObject->header.gfx.angle[1];
@@ -241,9 +235,9 @@ void copy_mario_state_to_object(void) {
     gCurrentObject->oFaceAngleYaw = gCurrentObject->header.gfx.angle[1];
     gCurrentObject->oFaceAngleRoll = gCurrentObject->header.gfx.angle[2];
 
-    gCurrentObject->oAngleVelPitch = gMarioStates[i].angleVel[0];
-    gCurrentObject->oAngleVelYaw = gMarioStates[i].angleVel[1];
-    gCurrentObject->oAngleVelRoll = gMarioStates[i].angleVel[2];
+    gCurrentObject->oAngleVelPitch = gMarioStates[gCurrentMario].angleVel[0];
+    gCurrentObject->oAngleVelYaw = gMarioStates[gCurrentMario].angleVel[1];
+    gCurrentObject->oAngleVelRoll = gMarioStates[gCurrentMario].angleVel[2];
 }
 
 /**
@@ -258,12 +252,18 @@ void spawn_particle(u32 activeParticleFlag, ModelID16 model, const BehaviorScrip
     }
 }
 
+s32 gCurrentMario = 0;
+
 /**
  * Mario's primary behavior update function.
  */
 void bhv_mario_update(void) {
     u32 particleFlags = 0;
     s32 i;
+
+    gMarioState = &gMarioStates[gCurrentMario];
+
+    if (gMarioState->action == ACT_UNINITIALIZED) set_mario_action(gMarioState, ACT_IDLE, 0);
 
     particleFlags = execute_mario_action(gCurrentObject);
     gCurrentObject->oMarioParticleFlags = particleFlags;
@@ -281,6 +281,8 @@ void bhv_mario_update(void) {
 
         i++;
     }
+    gMarioState = &gMarioStates[0];
+    gCurrentMario++;
 }
 
 /**
@@ -637,6 +639,7 @@ void clear_dynamic_surface_references(void) {
  * and object surface management.
  */
 void update_objects(UNUSED s32 unused) {
+    gCurrentMario = 0;
 
     gTimeStopState &= ~TIME_STOP_MARIO_OPENED_DOOR;
 

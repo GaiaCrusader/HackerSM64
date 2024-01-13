@@ -58,6 +58,8 @@ OSViMode VI;
 
 struct Config gConfig;
 
+u8 gPlayerCount = 4;
+
 struct VblankHandler *gVblankHandler1       = NULL;
 struct VblankHandler *gVblankHandler2       = NULL;
 struct VblankHandler *gVblankHandler3       = NULL;

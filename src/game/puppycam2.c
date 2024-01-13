@@ -135,7 +135,7 @@ void puppycam_default_config(void) {
     gPuppyCam.options.invertX = FALSE;
     gPuppyCam.options.sensitivityX = 5;
     gPuppyCam.options.analogue = FALSE;
-    gPuppyCam.options.inputType = INPUT_SINGLE_PRESS;
+    gPuppyCam.options.inputType = INPUT_CLASSIC;
     gPuppyCam.options.turnHelper = TRUE;
 }
 
@@ -680,7 +680,6 @@ static void puppycam_input_hold_preset2(f32 ivX) {
 
 // Another alternative control scheme. This one aims to mimic the parallel camera scheme down to the last bit from the original game.
 static void puppycam_input_hold_preset3(f32 ivX) {
-    f32 stickMag[2] = {gPlayer1Controller->rawStickX*0.65f, gPlayer1Controller->rawStickY*0.2f};
     // Just in case it happens to be nonzero.
     gPuppyCam.yawAcceleration = 0;
 
@@ -1455,11 +1454,11 @@ static void puppycam_apply(void) {
 
     // Commented out simply because vanilla SM64 has this always set sometimes, and relies on certain camera modes to apply secondary foci.
     // Uncomment to have fun with certain angles.
-    /*if (gSecondCameraFocus != NULL) {
+    if (gSecondCameraFocus != NULL) {
         gPuppyCam.targetObj2 = gSecondCameraFocus;
     } else {
         gPuppyCam.targetObj2 = NULL;
-    }*/
+    }
 
     if (gMarioState->floor != NULL) {
         sMarioGeometry.currFloor       = gMarioState->floor;

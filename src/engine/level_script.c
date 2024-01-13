@@ -321,11 +321,16 @@ static void level_cmd_change_area_skybox(void) {
     sCurrentCmd = CMD_NEXT;
 }
 
+extern struct Object *gOtherPlayers[MAX_NUM_PLAYERS - 1];
+
 static void level_cmd_init_level(void) {
     init_graph_node_start(NULL, (struct GraphNodeStart *) &gObjParentGraphNode);
     clear_objects();
     clear_areas();
     main_pool_push_state();
+    for (s32 i = 0; i < MAX_NUM_PLAYERS - 1; i++) {
+        gOtherPlayers[i] = 0;
+    } 
     for (u8 clearPointers = 0; clearPointers < AREA_COUNT; clearPointers++) {
         gAreaSkyboxStart[clearPointers] = 0;
         gAreaSkyboxEnd[clearPointers] = 0;

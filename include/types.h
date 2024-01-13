@@ -504,6 +504,10 @@ struct MarioState {
              s16 moveYaw;
              s16 ceilYaw;
              s16 wallYaw;
+	     u8 actionOverride;
+	     u8 playerControlled;
+	     s16 wallAngle;
+	     f32 overridePos[2];
     // -- HackerSM64 MarioState fields end --
 };
 

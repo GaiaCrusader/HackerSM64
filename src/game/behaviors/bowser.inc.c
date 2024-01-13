@@ -1094,9 +1094,9 @@ void bowser_act_dance(void) {
  */
 void bowser_spawn_collectable(void) {
     if (o->oBehParams2ndByte == BOWSER_BP_BITS) {
-        gSecondCameraFocus = spawn_object(o, MODEL_STAR, bhvGrandStar);
+        spawn_object(o, MODEL_STAR, bhvGrandStar);
     } else {
-        gSecondCameraFocus = spawn_object(o, MODEL_BOWSER_KEY, bhvBowserKey);
+        spawn_object(o, MODEL_BOWSER_KEY, bhvBowserKey);
         cur_obj_play_sound_2(SOUND_GENERAL2_BOWSER_KEY);
     }
     gSecondCameraFocus->oAngleVelYaw = o->oAngleVelYaw;

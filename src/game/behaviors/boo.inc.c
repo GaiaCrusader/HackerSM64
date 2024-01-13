@@ -494,7 +494,6 @@ void bhv_boo_loop(void) {
 
 static void big_boo_act_0(void) {
     if (cur_obj_has_behavior(bhvBalconyBigBoo)) {
-        obj_set_secondary_camera_focus();
         // number of killed boos set > 5 so that boo always loads
         // redundant? this is also done in behavior_data.s
         o->oBigBooNumMinionBoosKilled = 10;

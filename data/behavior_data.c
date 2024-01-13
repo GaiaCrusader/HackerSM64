@@ -3457,7 +3457,6 @@ const BehaviorScript bhvMario[] = {
     BEGIN(OBJ_LIST_PLAYER),
     SET_INT(oIntangibleTimer, 0),
     OR_LONG(oFlags, (OBJ_FLAG_PLAYER | OBJ_FLAG_SILHOUETTE)),
-    OR_INT(oUnk94, 0x0001),
     SET_HITBOX(/*Radius*/ 37, /*Height*/ 160),
     BEGIN_LOOP(),
 #ifdef VANILLA_DEBUG

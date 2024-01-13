@@ -9,6 +9,7 @@
 #include "synthesis.h"
 #include "game/debug.h"
 #include "game/main.h"
+#include "game/mario.h"
 #include "game/level_update.h"
 #include "game/object_list_processor.h"
 #include "game/camera.h"
@@ -25,6 +26,52 @@
 
 #define SAMPLES_TO_OVERPRODUCE 0x10
 #define EXTRA_BUFFERED_AI_SAMPLES_TARGET 0x40
+
+u32 gCharacterSounds[] = {
+    SOUND_MARIO_YAH_WAH_HOO,
+    SOUND_MARIO_HOOHOO,
+    SOUND_MARIO_YAHOO,
+    SOUND_MARIO_UH,
+    SOUND_MARIO_HRMM,
+    SOUND_MARIO_WAH2,
+    SOUND_MARIO_WHOA,
+    SOUND_MARIO_EEUH,
+    SOUND_MARIO_ATTACKED,
+    SOUND_MARIO_OOOF,
+    SOUND_MARIO_OOOF2,
+    SOUND_MARIO_HERE_WE_GO,
+    SOUND_MARIO_YAWNING,
+    SOUND_MARIO_SNORING1,
+    SOUND_MARIO_SNORING2,
+    SOUND_MARIO_WAAAOOOW,
+    SOUND_MARIO_HAHA,
+    SOUND_MARIO_HAHA_WATER,
+    SOUND_MARIO_UH_LEDGE_CLIMB_FAST,
+    SOUND_MARIO_UH_LONG_JUMP_LAND,
+    SOUND_MARIO_ON_FIRE,
+    SOUND_MARIO_DYING,
+    SOUND_MARIO_PANTING_COLD,
+    SOUND_MARIO_PANTING,
+    SOUND_MARIO_COUGHING1,
+    SOUND_MARIO_COUGHING2,
+    SOUND_MARIO_COUGHING3,
+    SOUND_MARIO_PUNCH_YAH,
+    SOUND_MARIO_PUNCH_HOO,
+    SOUND_MARIO_MAMA_MIA,
+    SOUND_MARIO_OKEY_DOKEY,
+    SOUND_MARIO_GROUND_POUND_WAH,
+    SOUND_MARIO_DROWNING,
+    SOUND_MARIO_PUNCH_WAH,
+    SOUND_MARIO_YAHOO_WAHA_YIPPEE,
+    SOUND_MARIO_DOH,
+    SOUND_MARIO_GAME_OVER,
+    SOUND_MARIO_HELLO,
+    SOUND_MARIO_PRESS_START_TO_PLAY,
+    SOUND_MARIO_TWIRL_BOUNCE,
+    SOUND_MARIO_SNORING3,
+    SOUND_MARIO_SO_LONGA_BOWSER,
+    SOUND_MARIO_IMA_TIRED,
+};
 
 struct Sound {
     s32 soundBits;
@@ -313,10 +360,10 @@ STATIC_ASSERT(ARRAY_COUNT(sBackgroundMusicDefaultVolume) == SEQ_COUNT,
 
 u8 sCurrentBackgroundMusicSeqId = SEQUENCE_NONE;
 u8 sMusicDynamicDelay = 0;
-u8 sSoundBankUsedListBack[SOUND_BANK_COUNT] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-u8 sSoundBankFreeListFront[SOUND_BANK_COUNT] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
-u8 sNumSoundsInBank[SOUND_BANK_COUNT] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }; // only used for debugging
-u8 sMaxChannelsForSoundBank[SOUND_BANK_COUNT] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+u8 sSoundBankUsedListBack[SOUND_BANK_COUNT];
+u8 sSoundBankFreeListFront[SOUND_BANK_COUNT];
+u8 sNumSoundsInBank[SOUND_BANK_COUNT]; // only used for debugging
+u8 sMaxChannelsForSoundBank[SOUND_BANK_COUNT];
 
 // sBackgroundMusicMaxTargetVolume and sBackgroundMusicTargetVolume use the 0x80
 // bit to indicate that they are set, and the rest of the bits for the actual value
@@ -348,7 +395,7 @@ struct UnkStruct80343D00 D_SH_80343D00;
 
 struct Sound sSoundRequests[0x100];
 // Curiously, this has size 3, despite SEQUENCE_PLAYERS == 4 on EU
-struct ChannelVolumeScaleFade D_80360928[3][CHANNELS_MAX];
+struct ChannelVolumeScaleFade D_80360928[SEQUENCE_PLAYERS][CHANNELS_MAX];
 u8 sUsedChannelsForSoundBank[SOUND_BANK_COUNT];
 u8 sCurrentSound[SOUND_BANK_COUNT][MAX_CHANNELS_PER_SOUND_BANK]; // index into sSoundBanks
 
@@ -1316,6 +1363,11 @@ static void update_game_sound(void) {
                             break;
                         case SOUND_BANK_ACTION:
                         case SOUND_BANK_VOICE:
+#ifdef EXTRA_SFX_CHANNEL_BANKS
+                        case SOUND_BANK_CUSTOM_FOREGROUND1:
+                        case SOUND_BANK_CUSTOM_FOREGROUND2:
+                        case SOUND_BANK_CUSTOM_FOREGROUND3:
+#endif
 #if defined(VERSION_EU) || defined(VERSION_SH)
                             func_802ad770(0x05020000 | ((channelIndex & 0xff) << 8),
                                           get_sound_reverb(bank, soundIndex, channelIndex));
@@ -1346,6 +1398,11 @@ static void update_game_sound(void) {
                         case SOUND_BANK_AIR:
                         case SOUND_BANK_GENERAL2:
                         case SOUND_BANK_OBJ2:
+#ifdef EXTRA_SFX_CHANNEL_BANKS
+                        case SOUND_BANK_CUSTOM_BACKGROUND1:
+                        case SOUND_BANK_CUSTOM_BACKGROUND2:
+                        case SOUND_BANK_CUSTOM_BACKGROUND3:
+#endif
 #if defined(VERSION_EU) || defined(VERSION_SH)
                             func_802ad770(0x05020000 | ((channelIndex & 0xff) << 8),
                                           get_sound_reverb(bank, soundIndex, channelIndex));
@@ -1482,6 +1539,11 @@ static void update_game_sound(void) {
                             break;
                         case SOUND_BANK_ACTION:
                         case SOUND_BANK_VOICE:
+#ifdef EXTRA_SFX_CHANNEL_BANKS
+                        case SOUND_BANK_CUSTOM_FOREGROUND1:
+                        case SOUND_BANK_CUSTOM_FOREGROUND2:
+                        case SOUND_BANK_CUSTOM_FOREGROUND3:
+#endif
 #if defined(VERSION_EU) || defined(VERSION_SH)
                             func_802ad770(0x05020000 | ((channelIndex & 0xff) << 8),
                                           get_sound_reverb(bank, soundIndex, channelIndex));
@@ -1512,6 +1574,11 @@ static void update_game_sound(void) {
                         case SOUND_BANK_AIR:
                         case SOUND_BANK_GENERAL2:
                         case SOUND_BANK_OBJ2:
+#ifdef EXTRA_SFX_CHANNEL_BANKS
+                        case SOUND_BANK_CUSTOM_BACKGROUND1:
+                        case SOUND_BANK_CUSTOM_BACKGROUND2:
+                        case SOUND_BANK_CUSTOM_BACKGROUND3:
+#endif
 #if defined(VERSION_EU) || defined(VERSION_SH)
                             func_802ad770(0x05020000 | ((channelIndex & 0xff) << 8),
                                           get_sound_reverb(bank, soundIndex, channelIndex));
@@ -1963,6 +2030,7 @@ void sound_init(void) {
         sSoundBankUsedListBack[i] = 0;
         sSoundBankFreeListFront[i] = 1;
         sNumSoundsInBank[i] = 0;
+	sMaxChannelsForSoundBank[i] = MAX_CHANNELS_PER_SOUND_BANK;
     }
 
     for (i = 0; i < SOUND_BANK_COUNT; i++) {
@@ -1979,7 +2047,7 @@ void sound_init(void) {
         sSoundBanks[i][j].next = 0xff;
     }
 
-    for (j = 0; j < 3; j++) {
+    for (j = 0; j < SEQUENCE_PLAYERS; j++) {
         for (i = 0; i < CHANNELS_MAX; i++) {
             D_80360928[j][i].remainingFrames = 0;
         }
@@ -2536,3 +2604,98 @@ void sound_reset(u8 reverbPresetId) {
     seq_player_play_sequence(SEQ_PLAYER_SFX, SEQ_SOUND_PLAYER, 0);
     sHasStartedFadeOut = FALSE;
 }
+
+void set_character_sound() {
+    if (gCurrentObject->header.gfx.sharedChild == gLoadedGraphNodes[MODEL_MARIO]) {
+        SOUND_CHARACTER_YAH_WAH_HOO = SOUND_MARIO_YAH_WAH_HOO;
+        SOUND_CHARACTER_HOOHOO = SOUND_MARIO_HOOHOO;
+        SOUND_CHARACTER_YAHOO = SOUND_MARIO_YAHOO;
+        SOUND_CHARACTER_UH = SOUND_MARIO_UH;
+        SOUND_CHARACTER_HRMM = SOUND_MARIO_HRMM;
+        SOUND_CHARACTER_WAH2 = SOUND_MARIO_WAH2;
+        SOUND_CHARACTER_WHOA = SOUND_MARIO_WHOA;
+        SOUND_CHARACTER_EEUH = SOUND_MARIO_EEUH;
+        SOUND_CHARACTER_ATTACKED = SOUND_MARIO_ATTACKED;
+        SOUND_CHARACTER_OOOF = SOUND_MARIO_OOOF;
+        SOUND_CHARACTER_OOOF2 = SOUND_MARIO_OOOF2;
+        SOUND_CHARACTER_HERE_WE_GO = SOUND_MARIO_HERE_WE_GO;
+        SOUND_CHARACTER_YAWNING = SOUND_MARIO_YAWNING;
+        SOUND_CHARACTER_SNORING1 = SOUND_MARIO_SNORING1;
+        SOUND_CHARACTER_SNORING2 = SOUND_MARIO_SNORING2;
+        SOUND_CHARACTER_WAAAOOOW = SOUND_MARIO_WAAAOOOW;
+        SOUND_CHARACTER_HAHA = SOUND_MARIO_HAHA;
+        SOUND_CHARACTER_HAHA_WATER = SOUND_MARIO_HAHA_WATER;
+        SOUND_CHARACTER_UH_LEDGE_CLIMB_FAST = SOUND_MARIO_UH_LEDGE_CLIMB_FAST;
+        SOUND_CHARACTER_UH_LONG_JUMP_LAND = SOUND_MARIO_UH_LONG_JUMP_LAND;
+        SOUND_CHARACTER_ON_FIRE = SOUND_MARIO_ON_FIRE;
+        SOUND_CHARACTER_DYING = SOUND_MARIO_DYING;
+        SOUND_CHARACTER_PANTING_COLD = SOUND_MARIO_PANTING_COLD;
+        SOUND_CHARACTER_PANTING = SOUND_MARIO_PANTING;
+        SOUND_CHARACTER_COUGHING1 = SOUND_MARIO_COUGHING1;
+        SOUND_CHARACTER_COUGHING2 = SOUND_MARIO_COUGHING2;
+        SOUND_CHARACTER_COUGHING3 = SOUND_MARIO_COUGHING3;
+        SOUND_CHARACTER_PUNCH_YAH = SOUND_MARIO_PUNCH_YAH;
+        SOUND_CHARACTER_PUNCH_HOO = SOUND_MARIO_PUNCH_HOO;
+        SOUND_CHARACTER_MAMA_MIA = SOUND_MARIO_MAMA_MIA;
+        SOUND_CHARACTER_OKEY_DOKEY = SOUND_MARIO_OKEY_DOKEY;
+        SOUND_CHARACTER_GROUND_POUND_WAH = SOUND_MARIO_GROUND_POUND_WAH;
+        SOUND_CHARACTER_DROWNING = SOUND_MARIO_DROWNING;
+        SOUND_CHARACTER_PUNCH_WAH = SOUND_MARIO_PUNCH_WAH;
+        SOUND_CHARACTER_YAHOO_WAHA_YIPPEE = SOUND_MARIO_YAHOO_WAHA_YIPPEE;
+        SOUND_CHARACTER_DOH = SOUND_MARIO_DOH;
+        SOUND_CHARACTER_GAME_OVER = SOUND_MARIO_GAME_OVER;
+        SOUND_CHARACTER_HELLO = SOUND_MARIO_HELLO;
+        SOUND_CHARACTER_PRESS_START_TO_PLAY = SOUND_MARIO_PRESS_START_TO_PLAY;
+        SOUND_CHARACTER_TWIRL_BOUNCE = SOUND_MARIO_TWIRL_BOUNCE;
+        SOUND_CHARACTER_SNORING3 = SOUND_MARIO_SNORING3;
+        SOUND_CHARACTER_SO_LONGA_BOWSER = SOUND_MARIO_SO_LONGA_BOWSER;
+        SOUND_CHARACTER_IMA_TIRED = SOUND_MARIO_IMA_TIRED;
+    }
+
+    if (gCurrentObject->header.gfx.sharedChild == gLoadedGraphNodes[MODEL_LUIGI]) {
+        SOUND_CHARACTER_YAH_WAH_HOO = SOUND_LUIGI_YAH_WAH_HOO;
+        SOUND_CHARACTER_HOOHOO = SOUND_LUIGI_HOOHOO;
+        SOUND_CHARACTER_YAHOO = SOUND_LUIGI_YAHOO;
+        SOUND_CHARACTER_UH = SOUND_LUIGI_UH;
+        SOUND_CHARACTER_HRMM = SOUND_LUIGI_HRMM;
+        SOUND_CHARACTER_WAH2 = SOUND_LUIGI_WAH2;
+        SOUND_CHARACTER_WHOA = SOUND_LUIGI_WHOA;
+        SOUND_CHARACTER_EEUH = SOUND_LUIGI_EEUH;
+        SOUND_CHARACTER_ATTACKED = SOUND_LUIGI_ATTACKED;
+        SOUND_CHARACTER_OOOF = SOUND_LUIGI_OOOF;
+        SOUND_CHARACTER_OOOF2 = SOUND_LUIGI_OOOF2;
+        SOUND_CHARACTER_HERE_WE_GO = SOUND_LUIGI_HERE_WE_GO;
+        SOUND_CHARACTER_YAWNING = SOUND_LUIGI_YAWNING;
+        SOUND_CHARACTER_SNORING1 = SOUND_LUIGI_SNORING1;
+        SOUND_CHARACTER_SNORING2 = SOUND_LUIGI_SNORING2;
+        SOUND_CHARACTER_WAAAOOOW = SOUND_LUIGI_WAAAOOOW;
+        SOUND_CHARACTER_HAHA = SOUND_LUIGI_HAHA;
+        SOUND_CHARACTER_HAHA_WATER = SOUND_LUIGI_HAHA_WATER;
+        SOUND_CHARACTER_UH_LEDGE_CLIMB_FAST = SOUND_LUIGI_UH_LEDGE_CLIMB_FAST;
+        SOUND_CHARACTER_UH_LONG_JUMP_LAND = SOUND_LUIGI_UH_LONG_JUMP_LAND;
+        SOUND_CHARACTER_ON_FIRE = SOUND_LUIGI_ON_FIRE;
+        SOUND_CHARACTER_DYING = SOUND_LUIGI_DYING;
+        SOUND_CHARACTER_PANTING_COLD = SOUND_LUIGI_PANTING_COLD;
+        SOUND_CHARACTER_PANTING = SOUND_LUIGI_PANTING;
+        SOUND_CHARACTER_COUGHING1 = SOUND_LUIGI_COUGHING1;
+        SOUND_CHARACTER_COUGHING2 = SOUND_LUIGI_COUGHING2;
+        SOUND_CHARACTER_COUGHING3 = SOUND_LUIGI_COUGHING3;
+        SOUND_CHARACTER_PUNCH_YAH = SOUND_LUIGI_PUNCH_YAH;
+        SOUND_CHARACTER_PUNCH_HOO = SOUND_LUIGI_PUNCH_HOO;
+        SOUND_CHARACTER_MAMA_MIA = SOUND_LUIGI_MAMA_MIA;
+        SOUND_CHARACTER_OKEY_DOKEY = SOUND_LUIGI_OKEY_DOKEY;
+        SOUND_CHARACTER_GROUND_POUND_WAH = SOUND_LUIGI_GROUND_POUND_WAH;
+        SOUND_CHARACTER_DROWNING = SOUND_LUIGI_DROWNING;
+        SOUND_CHARACTER_PUNCH_WAH = SOUND_LUIGI_PUNCH_WAH;
+        SOUND_CHARACTER_YAHOO_WAHA_YIPPEE = SOUND_LUIGI_YAHOO_WAHA_YIPPEE;
+        SOUND_CHARACTER_DOH = SOUND_LUIGI_DOH;
+        SOUND_CHARACTER_GAME_OVER = SOUND_LUIGI_GAME_OVER;
+        SOUND_CHARACTER_HELLO = SOUND_LUIGI_HELLO;
+        SOUND_CHARACTER_PRESS_START_TO_PLAY = SOUND_LUIGI_PRESS_START_TO_PLAY;
+        SOUND_CHARACTER_TWIRL_BOUNCE = SOUND_LUIGI_TWIRL_BOUNCE;
+        SOUND_CHARACTER_SNORING3 = SOUND_LUIGI_SNORING3;
+        SOUND_CHARACTER_SO_LONGA_BOWSER = SOUND_LUIGI_SO_LONGA_BOWSER;
+        SOUND_CHARACTER_IMA_TIRED = SOUND_LUIGI_IMA_TIRED;
+    }
+}
+

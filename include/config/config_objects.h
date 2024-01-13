@@ -12,7 +12,7 @@
  * The distance from Mario at which coin formations spawn their coins. Vanilla is 2000.0f.
  * Set this to o->oDrawingDistance for a more reasonable range at the cost of performance.
  */
-#define COIN_FORMATION_DISTANCE 2000.0f
+#define COIN_FORMATION_DISTANCE 4000.0f
 
 /**
  * Moving Coins flicker and disappear when they hit lava instead of being instantly deleted.
@@ -22,7 +22,7 @@
 /**
  * Allows for retries on collecting the remaining blue coins from a blue coin switch.
  */
-// #define BLUE_COIN_SWITCH_RETRY
+#define BLUE_COIN_SWITCH_RETRY
 
 /**
  * Allow previewing blue coin locations from a blue coin switch when Mario is standing on the blue coin switch.
@@ -36,13 +36,13 @@
 /**
  * Tiny Goombas (from THI) always drop their coin.
  */
-// #define TINY_GOOMBA_ALWAYS_DROPS_COIN
+#define TINY_GOOMBA_ALWAYS_DROPS_COIN
 
 /**
  * Floombas! These fellas sport custom behaviors (bhvFloomba, bhvFloombaTripletSpawner) and of course the iconic Floomba texture.
  * Also supports macros (macro_floomba, macro_huge_floomba, macro_tiny_floomba, macro_floomba_triplet_spawner, macro_floomba_quintuplet_spawner).
  */
-#define FLOOMBAS
+// #define FLOOMBAS
 
 /**************
  * -- HOOT --
@@ -65,7 +65,7 @@
 /**
  * Enables Mr I to shoot his particle in any direction.
  */
-// #define MR_I_PITCH_SHOOTING
+#define MR_I_PITCH_SHOOTING
 
 /********************
  * -- WATER RING --
