@@ -647,4 +647,6 @@ void anim_spline_init(Vec4s *keyFrames);
 s32  anim_spline_poll(Vec3f result);
 f32 find_surface_on_ray(Vec3f orig, Vec3f dir, struct Surface **hit_surface, Vec3f hit_pos, s32 flags);
 
+s32 convert_s16(s16 num);
+
 #endif // MATH_UTIL_H

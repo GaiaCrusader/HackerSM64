@@ -148,7 +148,7 @@ s16 gCollisionFlags = COLLISION_FLAGS_NONE;
 TerrainData *gEnvironmentRegions;
 s32 gEnvironmentLevels[20];
 struct TransitionRoomData gDoorAdjacentRooms[MAX_NUM_TRANSITION_ROOMS];
-s16 gMarioCurrentRoom;
+s16 gMarioCurrentRoom[MAX_NUM_PLAYERS];
 s16 gTHIWaterDrained;
 s16 gTTCSpeedSetting;
 s16 gMarioShotFromCannon;
@@ -522,7 +522,9 @@ void clear_objects(void) {
     gTHIWaterDrained = 0;
     gTimeStopState = 0;
     gMarioObject = NULL;
-    gMarioCurrentRoom = 0;
+    for (i = 0; i < MAX_NUM_PLAYERS; i++) {
+        gMarioCurrentRoom[i] = 0;
+    }
 
     bzero(gDoorAdjacentRooms, sizeof(gDoorAdjacentRooms));
 

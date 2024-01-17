@@ -851,6 +851,10 @@ u32 set_mario_action_airborne(struct MarioState *m, u32 action, u32 actionArg) {
         case ACT_JUMP_KICK:
             m->vel[1] = 20.0f;
             break;
+
+        case ACT_RIDE_YOSHI_JUMP:
+	    m->vel[1] = 50.0f;
+	    break;
     }
 
     m->peakHeight = m->pos[1];
@@ -1873,6 +1877,12 @@ s32 execute_mario_action(UNUSED struct Object *obj) {
 #endif
 
         return gMarioState->particleFlags;
+    }
+
+    if (gMarioState->pos[1] == gMarioState->floorHeight) {
+	gMarioState->flutterDelay = 10;
+    } else {
+	gMarioState->flutterDelay -= 1;
     }
 
     return ACTIVE_PARTICLE_NONE;

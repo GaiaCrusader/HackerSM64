@@ -706,6 +706,12 @@ enum MarioActionFlags {
 // group 0x1C0: custom actions
 // 0x1C0 - 0x1FF
 
+#define ACT_RIDE_YOSHI_IDLE	       0x000001C0 // (0x1C0 | ACT_FLAG_STATIONARY | ACT_FLAG_IDLE)
+#define ACT_RIDE_YOSHI_WALK	       0x000001C1 // (0x1C1 | ACT_FLAG_MOVING)
+#define ACT_RIDE_YOSHI_JUMP	       0x000001C2 // (0x1C2 | ACT_FLAG_AIR | ACT_FLAG_CONTROL_JUMP_HEIGHT)
+#define ACT_RIDE_YOSHI_FLUTTER	       0x000001C3 // (0x1C3 | ACT_FLAG_AIR | ACT_FLAG_CONTROL_JUMP_HEIGHT)
+#define ACT_RIDE_YOSHI_FALL	       0x000001C4 // (0x1C4 | ACT_FLAG_AIR | ACT_FLAG_MOVING)
+
 
 /**
  * This input mask is unused by the controller,

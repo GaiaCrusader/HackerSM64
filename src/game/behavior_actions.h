@@ -431,6 +431,7 @@ void bhv_treasure_chest_top_loop(void);
 void bhv_mips_init(void);
 void bhv_mips_loop(void);
 void bhv_yoshi_init(void);
+void bhv_yoshi_rideable_init(void);
 void bhv_koopa_init(void);
 void bhv_koopa_update(void);
 void bhv_koopa_race_endpoint_update(void);
@@ -549,6 +550,7 @@ void bhv_end_birds_2_loop(void);
 void bhv_intro_scene_loop(void);
 void bhv_dust_smoke_loop(void);
 void bhv_yoshi_loop(void);
+void bhv_yoshi_rideable_loop(void);
 void bhv_volcano_trap_loop(void);
 
 Gfx *geo_move_mario_part_from_parent(s32 callContext, UNUSED struct GraphNode *node, Mat4 mtx);

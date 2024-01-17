@@ -132,7 +132,7 @@ Gfx *geo_switch_area(s32 callContext, struct GraphNode *node, UNUSED void *conte
         print_debug_top_down_objectinfo("areainfo %d", room);
 
         if (room > 0) {
-            gMarioCurrentRoom = room;
+            gMarioCurrentRoom[gCurrentMario] = room;
             switchCase->selectedCase = (room - 1);
         }
     } else {
@@ -1871,8 +1871,8 @@ void bhv_init_room(void) {
 s32 cur_obj_is_mario_in_room(void) {
     if (o->oRoom != -1 && gMarioCurrentRoom != 0) {
         if (gMarioCurrentRoom == o->oRoom // Object is in Mario's room.
-            || gDoorAdjacentRooms[gMarioCurrentRoom].forwardRoom  == o->oRoom // Object is in the transition room's forward  room.
-            || gDoorAdjacentRooms[gMarioCurrentRoom].backwardRoom == o->oRoom // Object is in the transition room's backward room.
+            || gDoorAdjacentRooms[gMarioCurrentRoom[gCurrentMario]].forwardRoom  == o->oRoom // Object is in the transition room's forward  room.
+            || gDoorAdjacentRooms[gMarioCurrentRoom[gCurrentMario]].backwardRoom == o->oRoom // Object is in the transition room's backward room.
         ) {
             return MARIO_INSIDE_ROOM;
         }

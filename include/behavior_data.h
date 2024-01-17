@@ -441,6 +441,7 @@ extern const BehaviorScript bhvTreasureChestBottom[];
 extern const BehaviorScript bhvTreasureChestTop[];
 extern const BehaviorScript bhvMips[];
 extern const BehaviorScript bhvYoshi[];
+extern const BehaviorScript bhvYoshiRideable[];
 extern const BehaviorScript bhvKoopa[];
 extern const BehaviorScript bhvKoopaRaceEndpoint[];
 extern const BehaviorScript bhvKoopaFlag[];

@@ -222,8 +222,9 @@ void load_area(s32 index) {
         gCurrAreaIndex = gCurrentArea->index;
         main_pool_pop_state();
         main_pool_push_state();
-
-        gMarioCurrentRoom = 0;
+	for (u32 i = 0; i < MAX_NUM_PLAYERS; i++) {
+	    gMarioCurrentRoom[i] = 0;
+	}
 
         if (gCurrentArea->terrainData != NULL) {
             load_area_terrain(index, gCurrentArea->terrainData, gCurrentArea->surfaceRooms,

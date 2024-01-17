@@ -29,6 +29,7 @@ seq_startchannel 8, .channel38
 seq_startchannel 9, .channel59
 #ifdef EXTRA_SFX_CHANNEL_BANKS
 seq_startchannel 10, .channelA
+seq_startchannel 11, .channelB
 #endif
 .seq_loop:
 seq_delay 20000
@@ -88,6 +89,17 @@ chan_setval 0
 chan_iowriteval 5
 chan_stereoheadseteffects 1
 chan_setdyntable .channelA_table
+chan_jump .main_loop_023589
+
+.channelB:
+chan_largenoteson
+chan_setinstr 0
+chan_setpanmix 127
+chan_setnotepriority 14
+chan_setval 0
+chan_iowriteval 5
+chan_stereoheadseteffects 1
+chan_setdyntable .channelB_table
 chan_jump .main_loop_023589
 #endif
 
@@ -8170,6 +8182,10 @@ sound_ref .sound_luigi_snoring3
 sound_ref .sound_luigi_so_longa_bowser
 sound_ref .sound_luigi_ima_tired
 
+.channelB_table:
+sound_ref .sound_general_yoshi_flutter
+sound_ref .sound_general_yoshi_flutter_short
+
 #endif
 
 .sound_luigi_jump_hoo:
@@ -8218,7 +8234,6 @@ chan_setlayer 0, .layer_F6C
 chan_end
 
 .layer_F6C:
-layer_portamento_mario 0x82, 44, 200
 layer_note1_mario 39, 0x30, 127
 layer_end
 
@@ -8697,4 +8712,20 @@ chan_end
 
 .layer_F58:
 layer_note1 39, 0x96, 110
+layer_end
+
+.sound_general_yoshi_flutter:
+chan_setbank 13
+chan_setinstr 0
+chan_setlayer 0, .layer_yoshi
+chan_end
+
+.sound_general_yoshi_flutter_short:
+chan_setbank 13
+chan_setinstr 1
+chan_setlayer 0, .layer_yoshi
+chan_end
+
+.layer_yoshi:
+layer_note1 39, 0xC8, 127
 layer_end

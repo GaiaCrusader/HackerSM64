@@ -1969,6 +1969,86 @@ s32 act_special_triple_jump(struct MarioState *m) {
     return FALSE;
 }
 
+s32 act_ride_yoshi_flutter(struct MarioState *m) {
+    if (m->actionTimer == 0) {
+        if (m->vel[1] < -10) {
+	    m->vel[1] = -10;
+	} else if (m->vel[1] > 0) {
+	    m->vel[1] = 0;
+	}
+    }
+	
+    if (m->actionTimer <= 20) {
+	if (m->controller->buttonDown & A_BUTTON) {
+	    m->vel[1] += 5;
+	} else {
+	    play_sound(SOUND_GENERAL_YOSHI_FLUTTER, m->marioObj->header.gfx.cameraToObject);
+	    m->flutterDelay = 15;
+	    set_mario_action(m, ACT_RIDE_YOSHI_FALL, 1);
+	}
+    } else {
+	play_sound(SOUND_GENERAL_YOSHI_FLUTTER, m->marioObj->header.gfx.cameraToObject);
+	m->flutterDelay = 15;
+	set_mario_action(m, ACT_RIDE_YOSHI_FALL, 1);
+    }
+	
+    s32 stepResult = perform_air_step(m, 0);
+    update_air_without_turn(m);
+
+    if (stepResult == AIR_STEP_LANDED) set_mario_action(m, ACT_RIDE_YOSHI_WALK, 0);
+	
+    yoshi_dismount_check(m);
+    set_mario_animation(m, MARIO_ANIM_SLIDING_ON_BOTTOM_WITH_LIGHT_OBJ);
+    m->marioObj->header.gfx.pos[1] = m->pos[1] + 80;
+	
+    if (m->flags & MARIO_WING_CAP) {
+	m->actionTimer = 0;
+	m->faceAngle[1] = m->intendedYaw - approach_s32(convert_s16(m->intendedYaw - m->faceAngle[1]), 0, 0x800, 0x800);
+    } else {
+	m->actionTimer += 1;
+    }
+    return FALSE;
+}
+
+s32 act_ride_yoshi_jump(struct MarioState *m) {
+    if (m->actionTimer == 0) play_mario_sound(m, SOUND_CHARACTER_YAH_WAH_HOO, 0);
+    
+    if (m->actionTimer > 0) {
+	if ((m->controller->buttonDown & A_BUTTON) && (m->flutterDelay <= 0)) return set_mario_action(m, ACT_RIDE_YOSHI_FLUTTER, 0);
+    }
+	
+    s32 stepResult = perform_air_step(m, 0);
+    update_air_without_turn(m);
+
+    if (stepResult == AIR_STEP_LANDED) set_mario_action(m, ACT_RIDE_YOSHI_WALK, 0);
+	
+    yoshi_dismount_check(m);
+    set_mario_animation(m, MARIO_ANIM_SLIDING_ON_BOTTOM_WITH_LIGHT_OBJ);
+    m->marioObj->header.gfx.pos[1] = m->pos[1] + 112;
+    m->actionTimer += 1;
+    return FALSE;
+}
+
+s32 act_ride_yoshi_fall(struct MarioState *m) {
+    s32 stepResult = perform_air_step(m, 0);
+    if (m->actionTimer > 0) {
+	if ((m->controller->buttonDown & A_BUTTON) && (m->flutterDelay <= 0)) return set_mario_action(m, ACT_RIDE_YOSHI_FLUTTER, 0);
+    }
+    update_air_without_turn(m);
+	
+    if (stepResult == AIR_STEP_LANDED) set_mario_action(m, ACT_RIDE_YOSHI_WALK, 0);
+	
+    yoshi_dismount_check(m);
+    set_mario_animation(m, MARIO_ANIM_SLIDING_ON_BOTTOM_WITH_LIGHT_OBJ);
+    if (m->actionArg == 0) {
+	m->marioObj->header.gfx.pos[1] = m->pos[1] + 112;
+    } else if (m->actionArg == 1) {
+	m->marioObj->header.gfx.pos[1] = m->pos[1] + 80;
+    }
+    m->actionTimer += 1;
+    return FALSE;
+}
+
 s32 check_common_airborne_cancels(struct MarioState *m) {
     if (m->pos[1] < m->waterLevel - 100) {
         return set_water_plunge_action(m);
@@ -2044,6 +2124,9 @@ s32 mario_execute_airborne_action(struct MarioState *m) {
         case ACT_RIDING_HOOT:          cancel = act_riding_hoot(m);          break;
         case ACT_TOP_OF_POLE_JUMP:     cancel = act_top_of_pole_jump(m);     break;
         case ACT_VERTICAL_WIND:        cancel = act_vertical_wind(m);        break;
+        case ACT_RIDE_YOSHI_FLUTTER:   cancel = act_ride_yoshi_flutter(m);   break;
+        case ACT_RIDE_YOSHI_JUMP:      cancel = act_ride_yoshi_jump(m);      break;
+        case ACT_RIDE_YOSHI_FALL:      cancel = act_ride_yoshi_fall(m);      break;
     }
     /* clang-format on */
 

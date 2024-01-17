@@ -468,6 +468,39 @@ void update_walking_speed(struct MarioState *m) {
     apply_slope_accel(m);
 }
 
+s32 act_ride_yoshi_walk(struct MarioState *m) {
+    set_mario_animation(m, MARIO_ANIM_SLIDING_ON_BOTTOM_WITH_LIGHT_OBJ);
+    update_walking_speed(m);
+    s32 stepResult;
+
+    stepResult = perform_ground_step(m);
+
+    if (stepResult == GROUND_STEP_LEFT_GROUND) {
+        return set_mario_action(m, ACT_RIDE_YOSHI_FALL, 1);
+    } else if (stepResult == GROUND_STEP_NONE) {
+        if (m->intendedMag - m->forwardVel > 16.0) {
+            m->particleFlags |= PARTICLE_DUST;
+        }
+    }
+	
+    if (m->input & INPUT_A_PRESSED) {
+        return set_mario_action(m, ACT_RIDE_YOSHI_JUMP, 0);
+    }
+
+    if (ABS(m->forwardVel) <= 1) {
+        set_mario_action(m, ACT_RIDE_YOSHI_IDLE, 0);
+    }
+
+    if (m->input & INPUT_NONZERO_ANALOG) {
+	if (m->forwardVel <= 5) mario_set_forward_vel(m, 5);
+    }
+
+    yoshi_dismount_check(m);
+    
+    m->marioObj->header.gfx.pos[1] = m->pos[1] + 80;
+    return FALSE;
+}
+
 s32 should_begin_sliding(struct MarioState *m) {
     if (m->input & INPUT_ABOVE_SLIDE) {
         s32 superSlippery = (m->floor != NULL) && (m->floor->type == SURFACE_SUPER_SLIPPERY);
@@ -1534,10 +1567,14 @@ s32 act_hold_stomach_slide(struct MarioState *m) {
 }
 
 s32 act_dive_slide(struct MarioState *m) {
-    if (!(m->input & INPUT_ABOVE_SLIDE) && (m->input & (INPUT_A_PRESSED | INPUT_B_PRESSED))) {
-        queue_rumble_data(m->controller, 5, 80, 0);
-
-        return set_mario_action(m, m->forwardVel > 0.0f ? ACT_FORWARD_ROLLOUT : ACT_BACKWARD_ROLLOUT, 0);
+    if (!(m->input & INPUT_ABOVE_SLIDE)) {
+	if (m->input & INPUT_A_PRESSED) {
+	    queue_rumble_data(m->controller, 5, 80, 0);
+	    return set_mario_action(m, m->forwardVel > 0.0f ? ACT_FORWARD_ROLLOUT : ACT_BACKWARD_ROLLOUT, 0);
+	} else if (m->input & INPUT_B_PRESSED) {
+	    m->vel[1] = 21.0f;
+	    return set_mario_action(m, ACT_DIVE, 1);
+	}
     }
 
     play_mario_landing_sound_once(m, SOUND_ACTION_TERRAIN_BODY_HIT_GROUND);
@@ -1993,6 +2030,7 @@ s32 mario_execute_moving_action(struct MarioState *m) {
         case ACT_QUICKSAND_JUMP_LAND:      cancel = act_quicksand_jump_land(m);      break;
         case ACT_HOLD_QUICKSAND_JUMP_LAND: cancel = act_hold_quicksand_jump_land(m); break;
         case ACT_LONG_JUMP_LAND:           cancel = act_long_jump_land(m);           break;
+        case ACT_RIDE_YOSHI_WALK:          cancel = act_ride_yoshi_walk(m);          break;
     }
     /* clang-format on */
 

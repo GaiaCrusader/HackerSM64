@@ -354,7 +354,7 @@ struct Object {
     /*0x204*/ f32 hurtboxHeight;
     /*0x208*/ f32 hitboxDownOffset;
     /*0x20C*/ const BehaviorScript *behavior;
-    /*0x210*/ u32 unused2;
+    /*0x210*/ u16 heldByPlayerIndex;
     /*0x214*/ struct Object *platform;
     /*0x218*/ void *collisionData;
     /*0x21C*/ Mat4 transform;
@@ -504,10 +504,7 @@ struct MarioState {
              s16 moveYaw;
              s16 ceilYaw;
              s16 wallYaw;
-	     u8 actionOverride;
-	     u8 playerControlled;
-	     s16 wallAngle;
-	     f32 overridePos[2];
+	     s32 flutterDelay;
     // -- HackerSM64 MarioState fields end --
 };
 

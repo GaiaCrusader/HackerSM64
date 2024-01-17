@@ -172,4 +172,6 @@ void bhv_rr_cruiser_wing_init(void);
 void bhv_rr_cruiser_wing_loop(void);
 void spawn_default_star(f32 x, f32 y, f32 z);
 
+struct MarioState* nearest_mario_state_to_object(struct Object* obj);
+
 #endif // OBJ_BEHAVIORS_H

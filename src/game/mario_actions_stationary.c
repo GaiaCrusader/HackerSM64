@@ -1059,6 +1059,27 @@ s32 act_first_person(struct MarioState *m) {
     return FALSE;
 }
 
+s32 act_ride_yoshi_idle(struct MarioState *m) {
+    yoshi_dismount_check(m);
+    s32 stepResult = stationary_ground_step(m);
+    if (stepResult == GROUND_STEP_LEFT_GROUND) {
+        return set_mario_action(m, ACT_RIDE_YOSHI_FALL, 0);
+    }
+
+    if (m->input & INPUT_A_PRESSED) {
+        return set_mario_action(m, ACT_RIDE_YOSHI_JUMP, 0);
+    }
+
+    if (m->input & INPUT_NONZERO_ANALOG) {
+        m->faceAngle[1] = m->intendedYaw;
+        return set_mario_action(m, ACT_RIDE_YOSHI_WALK, 0);
+    }
+
+    m->marioObj->header.gfx.pos[1] = m->pos[1] + 80;
+    set_mario_animation(m, MARIO_ANIM_SLIDING_ON_BOTTOM_WITH_LIGHT_OBJ);
+    return FALSE;
+}
+
 s32 check_common_stationary_cancels(struct MarioState *m) {
     if (m->pos[1] < m->waterLevel - 100) {
         if (m->action == ACT_SPAWN_SPIN_LANDING) {
@@ -1131,6 +1152,7 @@ s32 mario_execute_stationary_action(struct MarioState *m) {
         case ACT_BRAKING_STOP:            cancel = act_braking_stop(m);                     break;
         case ACT_BUTT_SLIDE_STOP:         cancel = act_butt_slide_stop(m);                  break;
         case ACT_HOLD_BUTT_SLIDE_STOP:    cancel = act_hold_butt_slide_stop(m);             break;
+        case ACT_RIDE_YOSHI_IDLE:         cancel = act_ride_yoshi_idle(m);                  break;
         default:                          cancel = TRUE;                                    break;
     }
     /* clang-format on */

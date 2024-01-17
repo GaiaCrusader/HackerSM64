@@ -23,7 +23,7 @@
 #endif
 .word  0x0000004E               /* Cartridge */
 #if defined(EEP4K) && !defined(EMU_DEFAULT_TO_GCN)
-.ascii "SM"                     /* Cartridge ID */
+.ascii "M2"                     /* Cartridge ID */
 #else
 .ascii "ED"                     /* Cartridge ID */
 #endif

@@ -274,6 +274,12 @@ void mario_grab_used_object(struct MarioState *m) {
     }
 }
 
+void yoshi_dismount_check(struct MarioState *m) {
+    if (m->controller->buttonPressed & Z_TRIG) mario_stop_riding_object(m);
+    m->pos[1] = m->marioObj->header.gfx.pos[1];
+    set_mario_action(m, ACT_TRIPLE_JUMP, 0);
+}
+
 void mario_drop_held_object(struct MarioState *m) {
     if (m->heldObj != NULL) {
         if (m->heldObj->behavior == segmented_to_virtual(bhvKoopaShellUnderwater)) {

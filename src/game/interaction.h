@@ -128,6 +128,7 @@ s16 mario_obj_angle_to_object(struct MarioState *m, struct Object *obj);
 void mario_stop_riding_object(struct MarioState *m);
 void mario_grab_used_object(struct MarioState *m);
 void mario_drop_held_object(struct MarioState *m);
+void yoshi_dismount_check(struct MarioState *m);
 void mario_throw_held_object(struct MarioState *m);
 void mario_stop_riding_and_holding(struct MarioState *m);
 u32  does_mario_have_normal_cap_on_head(struct MarioState *m);
@@ -139,5 +140,6 @@ u32  mario_check_object_grab(struct MarioState *m);
 u32  get_door_save_file_flag(struct Object *door);
 void mario_process_interactions(struct MarioState *m);
 void mario_handle_special_floors(struct MarioState *m);
+void push_mario_out_of_object(struct MarioState *m, struct Object *obj, f32 padding);
 
 #endif // INTERACTION_H

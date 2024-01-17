@@ -726,6 +726,25 @@ UNUSED s32 debug_sequence_tracker(s16 debugInputSequence[]) {
     return FALSE;
 }
 
+/**
+ * Returns closest MarioState
+ */
+struct MarioState* nearest_mario_state_to_object(struct Object *obj) {
+    if (!obj) return NULL;
+    struct MarioState* nearest = NULL;
+    f32 nearestDist = 0;
+    for (s32 i = 0; i < MAX_NUM_PLAYERS; i++) {
+        if (!gMarioStates[i].marioObj) continue;
+        if (gMarioStates[i].marioObj == obj) continue;
+        f32 dist = dist_between_objects(obj, gMarioStates[i].marioObj);
+        if (nearest == NULL || dist < nearestDist) {
+            nearest = &gMarioStates[i];
+            nearestDist = dist;
+        }
+    }
+    return nearest;
+}
+
 #include "behaviors/moving_coin.inc.c"
 #include "behaviors/seaweed.inc.c"
 #include "behaviors/bobomb.inc.c"
@@ -782,3 +801,4 @@ UNUSED s32 debug_sequence_tracker(s16 debugInputSequence[]) {
 #include "behaviors/treasure_chest.inc.c"
 #include "behaviors/mips.inc.c"
 #include "behaviors/yoshi.inc.c"
+#include "behaviors/yoshi_rideable.inc.c"

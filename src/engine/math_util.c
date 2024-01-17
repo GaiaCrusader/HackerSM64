@@ -1557,3 +1557,11 @@ OPTIMIZE_OS void mtxf_to_mtx_fast(s16* dst, float* src) {
     //  to set the top half.
     dst[15] = 1;
 }
+
+s32 convert_s16(s16 num) {
+    s16 min = -32768;
+    s16 max = 32767;
+    while (num < min) num = max + (num - min);
+    while (num > max) num = min + (num - max);
+    return num;
+}

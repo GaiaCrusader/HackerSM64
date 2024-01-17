@@ -5008,6 +5008,23 @@ const BehaviorScript bhvYoshi[] = {
     END_LOOP(),
 };
 
+const BehaviorScript bhvYoshiRideable[] = {
+    BEGIN(OBJ_LIST_GENACTOR),
+    OR_INT(oFlags, (OBJ_FLAG_SET_FACE_YAW_TO_MOVE_YAW | OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE)),
+    LOAD_ANIMATIONS(oAnimations, yoshi_seg5_anims_05024100),
+    DROP_TO_FLOOR(),
+    SET_HITBOX(/*Radius*/ 50, /*Height*/ 40),
+    ANIMATE(YOSHI_ANIM_IDLE),
+    SET_HOME(),
+    SET_INT(oHealth, 1),
+    SET_INT(oIntangibleTimer, 0),
+    CALL_NATIVE(bhv_yoshi_rideable_init),
+    BEGIN_LOOP(),
+	SET_INT(oInteractStatus, INT_STATUS_NONE),
+        CALL_NATIVE(bhv_yoshi_rideable_loop),
+    END_LOOP(),
+};
+
 const BehaviorScript bhvKoopa[] = {
     BEGIN(OBJ_LIST_PUSHABLE),
     OR_INT(oFlags, (OBJ_FLAG_COMPUTE_ANGLE_TO_MARIO | OBJ_FLAG_COMPUTE_DIST_TO_MARIO | OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE)),

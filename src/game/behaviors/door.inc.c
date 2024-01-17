@@ -121,18 +121,22 @@ void bhv_door_init(void) {
 }
 
 void bhv_door_rendering_loop(void) {
-    struct TransitionRoomData* transitionRoom = &gDoorAdjacentRooms[gMarioCurrentRoom];
-
-    o->oDoorIsRendering = (
-        gMarioCurrentRoom            == 0                    || // Mario is in the "global" room.
-        gMarioCurrentRoom            == o->oDoorSelfRoom     || // Mario is in the same room as the door.
-        gMarioCurrentRoom            == o->oDoorForwardRoom  || // Mario is in the door's  forward room.
-        gMarioCurrentRoom            == o->oDoorBackwardRoom || // Mario is in the door's backward room.
-        transitionRoom->forwardRoom  == o->oDoorForwardRoom  || // The transition room's  forward room is in the same room as this door's  forward room.
-        transitionRoom->forwardRoom  == o->oDoorBackwardRoom || // The transition room's  forward room is in the same room as this door's backward room.
-        transitionRoom->backwardRoom == o->oDoorForwardRoom  || // The transition room's backward room is in the same room as this door's  forward room.
-        transitionRoom->backwardRoom == o->oDoorBackwardRoom    // The transition room's backward room is in the same room as this door's backward room.
-    );
+    for (u32 i = 0; i < MAX_NUM_PLAYERS - 1; i++) {
+	struct TransitionRoomData* transitionRoom = &gDoorAdjacentRooms[gMarioCurrentRoom[i]];
+	o->oDoorIsRendering = (
+            gMarioCurrentRoom[1 + i] == 0                    || // Mario is in the "global" room.
+            gMarioCurrentRoom[1 + i] == o->oDoorSelfRoom     || // Mario is in the same room as the door.
+            gMarioCurrentRoom[1 + i] == o->oDoorForwardRoom  || // Mario is in the door's  forward room.
+            gMarioCurrentRoom[1 + i] == o->oDoorBackwardRoom || // Mario is in the door's backward room.
+            transitionRoom->forwardRoom  == o->oDoorForwardRoom  || // The transition room's  forward room is in the same room as this door's  forward room.
+            transitionRoom->forwardRoom  == o->oDoorBackwardRoom || // The transition room's  forward room is in the same room as this door's backward room.
+            transitionRoom->backwardRoom == o->oDoorForwardRoom  || // The transition room's backward room is in the same room as this door's  forward room.
+            transitionRoom->backwardRoom == o->oDoorBackwardRoom    // The transition room's backward room is in the same room as this door's backward room.
+	);
+        if (o->oDoorIsRendering) {
+            break;
+        }
+    }
 
     COND_BIT(o->oDoorIsRendering, o->header.gfx.node.flags, GRAPH_RENDER_ACTIVE);
 }
