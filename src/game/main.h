@@ -29,6 +29,16 @@ enum ThreadID {
     THREAD_9_DA_COUNTER,
 };
 
+// Message IDs
+enum MessageIDs {
+    MESG_SP_COMPLETE = 100,
+    MESG_DP_COMPLETE,
+    MESG_VI_VBLANK,
+    MESG_START_GFX_SPTASK,
+    MESG_NMI_REQUEST,
+    MESG_RCP_HUNG,
+};
+
 extern struct Config gConfig;
 
 // extern OSThread gUnkThread;

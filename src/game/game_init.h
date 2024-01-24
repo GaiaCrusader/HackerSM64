@@ -25,6 +25,10 @@ enum ZBmodes {
 
 extern OSMesgQueue gGameVblankQueue;
 extern OSMesgQueue gGfxVblankQueue;
+#ifdef HVQM
+extern OSMesgQueue gHVQM_SyncQueue;
+extern OSMesg gHVQM_SyncMesg;
+#endif
 extern OSMesg gGameMesgBuf[1];
 extern OSMesg gGfxMesgBuf[1];
 extern struct VblankHandler gGameVblankHandler;

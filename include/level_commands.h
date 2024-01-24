@@ -74,6 +74,7 @@ enum LevelCommands {
     /*0x3F*/ LEVEL_CMD_PUPPYLIGHT_ENVIRONMENT,
     /*0x40*/ LEVEL_CMD_PUPPYLIGHT_NODE,
     /*0x41*/ LEVEL_CMD_SET_ECHO,
+    /*0x42*/ LEVEL_CMD_PLAY_HVQM,
 };
 
 enum LevelActs {
@@ -455,6 +456,10 @@ enum GoddardScene {
 #define MACRO_OBJECTS(objList) \
     CMD_BBH(LEVEL_CMD_SET_MACRO_OBJECTS, 0x08, 0x0000), \
     CMD_PTR(objList)
+
+#define PLAY_HVQM(ptr) \
+    CMD_BBH(LEVEL_CMD_PLAY_HVQM, 0x08, 0), \
+    CMD_PTR(ptr)
 
 // unused
 #define CMD3A(unk2, unk4, unk6, unk8, unk10) \
